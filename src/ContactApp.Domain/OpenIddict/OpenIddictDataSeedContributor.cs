@@ -62,6 +62,18 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
                 }
             });
         }
+        if (await _scopeManager.FindByNameAsync("ContactApp.WebApplication") == null)
+        {
+            await _scopeManager.CreateAsync(new OpenIddictScopeDescriptor
+            {
+                Name = "ContactApp.WebApplication",
+                DisplayName = "ContactApp WebApplication API",
+                Resources =
+                {
+                    "ContactApp.WebApplication"
+                }
+            });
+        }
     }
 
     private async Task CreateApplicationsAsync()
@@ -72,127 +84,65 @@ public class OpenIddictDataSeedContributor : IDataSeedContributor, ITransientDep
             OpenIddictConstants.Permissions.Scopes.Email,
             OpenIddictConstants.Permissions.Scopes.Phone,
             OpenIddictConstants.Permissions.Scopes.Profile,
-            OpenIddictConstants.Permissions.Scopes.Roles,
-            "ContactApp"
+            OpenIddictConstants.Permissions.Scopes.Roles
         };
+
+        var webScopes = new List<string>();
+        webScopes.AddRange(commonScopes);
+        webScopes.Add("ContactApp.WebApplication");
+
+        var apiScopes = new List<string>();
+        apiScopes.AddRange(commonScopes);
+        apiScopes.Add("ContactApp");
 
         var configurationSection = _configuration.GetSection("OpenIddict:Applications");
 
         //Web Client
-        var webClientId = configurationSection["ContactApp_Web:ClientId"];
-        if (!webClientId.IsNullOrWhiteSpace())
+        var adminClientId = configurationSection["ContactApp_WebApplication:ClientId"];
+        if (!adminClientId.IsNullOrWhiteSpace())
         {
-            var webClientRootUrl = configurationSection["ContactApp_Web:RootUrl"].EnsureEndsWith('/');
+            var adminClientRootUrl = configurationSection["ContactApp_WebApplication:RootUrl"].TrimEnd('/');
 
-            /* ContactApp_Web client is only needed if you created a tiered
+            /* PetProjectEcommerce_Admin client is only needed if you created a tiered
              * solution. Otherwise, you can delete this client. */
             await CreateApplicationAsync(
-                name: webClientId,
+                name: adminClientId,
                 type: OpenIddictConstants.ClientTypes.Confidential,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
                 displayName: "Web Application",
-                secret: configurationSection["ContactApp_Web:ClientSecret"] ?? "1q2w3e*",
+                secret: configurationSection["ContactApp_WebApplication:ClientSecret"] ?? "1q2w3e*",
                 grantTypes: new List<string> //Hybrid flow
                 {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                    OpenIddictConstants.GrantTypes.Implicit
-                },
-                scopes: commonScopes,
-                redirectUri: $"{webClientRootUrl}signin-oidc",
-                clientUri: webClientRootUrl,
-                postLogoutRedirectUri: $"{webClientRootUrl}signout-callback-oidc"
-            );
-        }
-
-        //Console Test / Angular Client
-        var consoleAndAngularClientId = configurationSection["ContactApp_App:ClientId"];
-        if (!consoleAndAngularClientId.IsNullOrWhiteSpace())
-        {
-            var consoleAndAngularClientRootUrl = configurationSection["ContactApp_App:RootUrl"]?.TrimEnd('/');
-            await CreateApplicationAsync(
-                name: consoleAndAngularClientId,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Console Test / Angular Application",
-                secret: null,
-                grantTypes: new List<string>
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
                     OpenIddictConstants.GrantTypes.Password,
-                    OpenIddictConstants.GrantTypes.ClientCredentials,
-                    OpenIddictConstants.GrantTypes.RefreshToken
+                    OpenIddictConstants.GrantTypes.RefreshToken,
+                    OpenIddictConstants.GrantTypes.Implicit
                 },
-                scopes: commonScopes,
-                redirectUri: consoleAndAngularClientRootUrl,
-                clientUri: consoleAndAngularClientRootUrl,
-                postLogoutRedirectUri: consoleAndAngularClientRootUrl
+                scopes: apiScopes,
+                redirectUri: adminClientRootUrl,
+                clientUri: adminClientRootUrl,
+                postLogoutRedirectUri: adminClientRootUrl
             );
         }
 
-        // Blazor Client
-        var blazorClientId = configurationSection["ContactApp_Blazor:ClientId"];
-        if (!blazorClientId.IsNullOrWhiteSpace())
+        //Swagger Client
+        var swaggerClient = configurationSection["ContactApp_API_Swagger:ClientId"];
+        if (!swaggerClient.IsNullOrWhiteSpace())
         {
-            var blazorRootUrl = configurationSection["ContactApp_Blazor:RootUrl"].TrimEnd('/');
+            var swaggerRootUrl = configurationSection["ContactApp_API_Swagger:RootUrl"].TrimEnd('/');
 
+            /* PetProjectEcommerce_Web client is only needed if you created a tiered
+             * solution. Otherwise, you can delete this client. */
             await CreateApplicationAsync(
-                name: blazorClientId,
+                name: swaggerClient,
                 type: OpenIddictConstants.ClientTypes.Public,
                 consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Blazor Application",
+                displayName: "Swagger API Application",
                 secret: null,
-                grantTypes: new List<string>
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                },
-                scopes: commonScopes,
-                redirectUri: $"{blazorRootUrl}/authentication/login-callback",
-                clientUri: blazorRootUrl,
-                postLogoutRedirectUri: $"{blazorRootUrl}/authentication/logout-callback"
-            );
-        }
-
-        // Blazor Server Tiered Client
-        var blazorServerTieredClientId = configurationSection["ContactApp_BlazorServerTiered:ClientId"];
-        if (!blazorServerTieredClientId.IsNullOrWhiteSpace())
-        {
-            var blazorServerTieredRootUrl = configurationSection["ContactApp_BlazorServerTiered:RootUrl"].EnsureEndsWith('/');
-
-            await CreateApplicationAsync(
-                name: blazorServerTieredClientId,
-                type: OpenIddictConstants.ClientTypes.Confidential,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Blazor Server Application",
-                secret: configurationSection["ContactApp_BlazorServerTiered:ClientSecret"] ?? "1q2w3e*",
                 grantTypes: new List<string> //Hybrid flow
                 {
                     OpenIddictConstants.GrantTypes.AuthorizationCode,
-                    OpenIddictConstants.GrantTypes.Implicit
                 },
-                scopes: commonScopes,
-                redirectUri: $"{blazorServerTieredRootUrl}signin-oidc",
-                clientUri: blazorServerTieredRootUrl,
-                postLogoutRedirectUri: $"{blazorServerTieredRootUrl}signout-callback-oidc"
-            );
-        }
-
-        // Swagger Client
-        var swaggerClientId = configurationSection["ContactApp_Swagger:ClientId"];
-        if (!swaggerClientId.IsNullOrWhiteSpace())
-        {
-            var swaggerRootUrl = configurationSection["ContactApp_Swagger:RootUrl"].TrimEnd('/');
-
-            await CreateApplicationAsync(
-                name: swaggerClientId,
-                type: OpenIddictConstants.ClientTypes.Public,
-                consentType: OpenIddictConstants.ConsentTypes.Implicit,
-                displayName: "Swagger Application",
-                secret: null,
-                grantTypes: new List<string>
-                {
-                    OpenIddictConstants.GrantTypes.AuthorizationCode,
-                },
-                scopes: commonScopes,
+                scopes: apiScopes,
                 redirectUri: $"{swaggerRootUrl}/swagger/oauth2-redirect.html",
                 clientUri: swaggerRootUrl
             );
