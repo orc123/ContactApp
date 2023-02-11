@@ -13,6 +13,7 @@ erDiagram
 		string Address
 		string Job
 		Datetime Birthday
+		bool BestFriend
 		string Note
 		int Relationship
 	}
