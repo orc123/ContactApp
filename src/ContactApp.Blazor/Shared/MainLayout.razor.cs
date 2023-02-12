@@ -3,6 +3,7 @@ using MudBlazor.ThemeManager;
 using MudBlazor;
 using ContactApp.Blazor.Theme;
 using Microsoft.AspNetCore.Components.Authorization;
+using ContactApp.Blazor.Core;
 
 namespace ContactApp.Blazor.Shared;
 
@@ -10,8 +11,8 @@ public partial class MainLayout : IDisposable
 {
     private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
     public bool _drawerOpen = true;
-    public bool _themeManagerOpen = false;
     public string fullName = string.Empty;
+    public bool _themeManagerOpen = false;
     public long count = 0;
     int pageIndex = 1;
     int pageSize = 8;
@@ -20,23 +21,23 @@ public partial class MainLayout : IDisposable
         _drawerOpen = !_drawerOpen;
     }
 
-    //void OpenThemeManager(bool value)
-    //{
-    //    _themeManagerOpen = value;
-    //}
+    void OpenThemeManager(bool value)
+    {
+        _themeManagerOpen = value;
+    }
 
-    //void UpdateTheme(ThemeManagerTheme value)
-    //{
-    //    _themeManager = value;
-    //    StateHasChanged();
-    //}
+    void UpdateTheme(ThemeManagerTheme value)
+    {
+        _themeManager = value;
+        StateHasChanged();
+    }
 
     protected override async Task OnInitializedAsync()
     {
         var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
         var accessToken = await sessionStorage.GetItemAsync<string>("AccessToken");
         var user = authState.User;
-
+        fullName = user.GetFullName();
         if (user.Identity.IsAuthenticated)
         {
 

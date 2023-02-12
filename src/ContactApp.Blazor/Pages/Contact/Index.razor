@@ -1,0 +1,65 @@
+﻿@page "/app/contact"
+@using ContactApp.Blazor.Components
+@using ContactApp.Blazor.Services.Interface;
+
+@inject IContactService contactService
+
+<MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Danh Sách Các Contact</MudText>
+<MudGrid>
+    <MudItem xs="12" sm="12" md="12">
+        <MudCard Style="height:100%;">
+            <MudCardHeader>
+                <CardHeaderContent>
+                     <MudButton Variant="Variant.Filled" OnClick="async ()=> await GetPersions()" Color="Color.Primary" Style="margin-top: 10px; margin-right: 16px; float: right;">Thêm mới </MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="async ()=> await GetPersions()" Color="Color.Primary" Style="margin-top: 10px; margin-right: 16px; float: right;">Tìm kiếm</MudButton>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent Class="px-0">
+                <MudGrid>
+                    <MudItem xs="12" md="12">
+                        <MudTable Items="@Elements" FixedHeader="true" FixedFooter="false" Height="400px">
+                            <HeaderContent>
+                                <MudTh>Email</MudTh>
+                                <MudTh>Họ</MudTh>
+                                <MudTh>Tên</MudTh>
+                                <MudTh>Số điện thoại</MudTh>
+                                <MudTh>Địa chỉ</MudTh>
+                                <MudTh>Nghề nghiệp</MudTh>
+                                <MudTh>Ngày sinh</MudTh>
+                                <MudTh>Có là bạn thân</MudTh>
+                            </HeaderContent>
+                             <RowTemplate>
+                                <MudTd DataLabel="Email">@context.Email</MudTd>
+                                <MudTd DataLabel="Họ">@context.FirstName</MudTd>
+                                <MudTd DataLabel="Tên">@context.LastName</MudTd>
+                                <MudTd DataLabel="Số điện thoại">@context.Address</MudTd>
+                                <MudTd DataLabel="Địa chỉ">@context.Job</MudTd>
+                                <MudTd DataLabel="Ngày sinh">@context.BirthDate?.ToString("dd/MM/yyyy")</MudTd>
+                                <MudTd DataLabel="Có là bạn thân?">
+                                    @if (!context.BestFriend)
+                                    {
+                                        <MudButton Color="Color.Default">Không</MudButton>
+                                    }
+                                    else
+                                    {
+                                        <MudButton Color="Color.Primary">Có</MudButton>
+                                    }
+                                </MudTd>
+                            </RowTemplate>
+
+                            <PagerContent>
+                                <Pagination MetaData="MetaData" Spread="5" SelectedPage="SelectedPage"></Pagination>
+                            </PagerContent>
+                        </MudTable>
+                    </MudItem>
+                </MudGrid>
+
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</MudGrid>
+
+<MudOverlay Visible="loading" DarkBackground="true" Absolute="true">
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+</MudOverlay>

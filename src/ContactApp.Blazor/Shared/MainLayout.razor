@@ -1,5 +1,6 @@
 ﻿@using ContactApp.Blazor.Services.Interface;
 @using Microsoft.AspNetCore.Components.Authorization;
+@using MudBlazor.ThemeManager
 
 @inherits LayoutComponentBase
 
@@ -62,7 +63,7 @@
             @Body
         </MudContainer>
     </MudMainContent>
-    @*<MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
+    <MudThemeManagerButton OnClick="@((e) => OpenThemeManager(true))" />
     <MudThemeManager Open="_themeManagerOpen" OpenChanged="OpenThemeManager" Theme="_themeManager"
-                     ThemeChanged="UpdateTheme" />*@
+                     ThemeChanged="UpdateTheme" />
 </MudLayout>

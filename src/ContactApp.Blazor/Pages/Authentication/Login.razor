@@ -19,8 +19,10 @@
 
     <MudTextField @bind-Value="@model.Password" Label="Mật khẩu" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
 
+
     <div Class="d-flex justify-space-between align-center">
         <MudCheckBox T="bool" Label="Nhớ mật khẩu?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+        <MudLink Href="/auth/register">Bạn chưa có tài khoản?</MudLink>
         <MudLink Href="/auth/forgot-password">Bạn quên mật khẩu?</MudLink>
     </div>
 

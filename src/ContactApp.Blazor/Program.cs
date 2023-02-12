@@ -28,6 +28,7 @@ public class Program
         });
 
         builder.Services.AddScoped<IAuthService, AuthService>();
+        builder.Services.AddScoped<IContactService, ContactService>();
 
         builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 
