@@ -1,8 +1,10 @@
 ﻿using System;
-using Volo.Abp.Application.Dtos;
+using System.Collections.Generic;
+using System.Text;
 
 namespace ContactApp;
-public class PersionDto : EntityDto<Guid>
+
+public class CreateOrUpdatePersion
 {
     public string Email { get; set; }
     public string FirstName { get; set; }

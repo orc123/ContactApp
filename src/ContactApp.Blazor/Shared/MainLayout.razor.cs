@@ -5,7 +5,7 @@ using ContactApp.Blazor.Theme;
 
 namespace ContactApp.Blazor.Shared;
 
-public partial class MainLayout
+public partial class MainLayout : IDisposable
 {
     private ThemeManagerTheme _themeManager = new ThemeManagerTheme();
     public bool _drawerOpen = true;
@@ -45,5 +45,11 @@ public partial class MainLayout
     {
         //await AuthService.LogoutAsync();
         //NavigationManager.NavigateTo(UrlConstants.Login);
+    }
+
+    public void Dispose()
+    {
+        //if (_hubConnection != null) _hubConnection.Remove("SendSuccessfullyNotification");
+        //if (AuthService != null) AuthService.DisposeEvent();
     }
 }

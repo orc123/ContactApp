@@ -35,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactApp.DbMigrator", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactApp.HttpApi.Host", "src\ContactApp.HttpApi.Host\ContactApp.HttpApi.Host.csproj", "{748584B1-BA69-4F6A-81AA-F4BDE6BCE29D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactApp.Blazor", "src\ContactApp.Blazor\ContactApp.Blazor.csproj", "{EBB5066E-8E46-415D-9E0A-9F07F6099A2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactApp.Blazor", "src\ContactApp.Blazor\ContactApp.Blazor.csproj", "{EBB5066E-8E46-415D-9E0A-9F07F6099A2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
