@@ -13,11 +13,11 @@ using Volo.Abp.Users;
 namespace ContactApp;
 
 [Authorize]
-public class PersionsService : ContactAppAppService, IPersionsService
+public class PersonsService : ContactAppAppService, IPersionsService
 {
     private readonly ICurrentUser currentUser;
     private readonly IPersonRepository personRepository;
-    public PersionsService(ICurrentUser currentUser, IPersonRepository personRepository)
+    public PersonsService(ICurrentUser currentUser, IPersonRepository personRepository)
     {
         this.currentUser = currentUser;
         this.personRepository = personRepository;
@@ -30,7 +30,7 @@ public class PersionsService : ContactAppAppService, IPersionsService
         return true;
     }
 
-    public async Task<PagedResultDto<PersionDto>> GetMeAsync(GetMyContactsRequest request)
+    public async Task<PagedResultDto<PersonDto>> GetMeAsync(GetMyContactsRequest request)
     {
         var (count, pagedItems) = await personRepository.GetPagedByUserId(
             currentUser.Id,
@@ -38,23 +38,23 @@ public class PersionsService : ContactAppAppService, IPersionsService
             request.MaxResultCount
         );
 
-        return new PagedResultDto<PersionDto>(
+        return new PagedResultDto<PersonDto>(
         count,
-            ObjectMapper.Map<List<ContactPersion>, List<PersionDto>>(
+            ObjectMapper.Map<List<ContactPersion>, List<PersonDto>>(
                 pagedItems
             ));
     }
 
-    public async Task<PersionDto> PostAsync(CreateOrUpdatePersion request)
+    public async Task<PersonDto> PostAsync(CreateOrUpdatePerson request)
     {
-        var entity = ObjectMapper.Map<CreateOrUpdatePersion, ContactPersion> (request);
+        var entity = ObjectMapper.Map<CreateOrUpdatePerson, ContactPersion> (request);
 
         var result = await personRepository.InsertAsync(entity);
 
-        return ObjectMapper.Map<ContactPersion, PersionDto>(result);
+        return ObjectMapper.Map<ContactPersion, PersonDto>(result);
     }
 
-    public async Task<PersionDto> PutAsync(Guid id, CreateOrUpdatePersion request)
+    public async Task<PersonDto> PutAsync(Guid id, CreateOrUpdatePerson request)
     {
         var entity = await personRepository.FirstOrDefaultAsync(x => x.Id == id && x.CreatorId == currentUser.Id && !x.IsDeleted);
         if (entity == null)
@@ -66,10 +66,19 @@ public class PersionsService : ContactAppAppService, IPersionsService
             );
         }
 
+        entity.Address = request.Address;
+        entity.BestFriend = request.BestFriend;
+        entity.BirthDate = request.BirthDate;
+        entity.Email = request.Email;
+        entity.FirstName = request.FirstName;
+        entity.LastName = request.LastName;
+        entity.Job = request.Job;
+        entity.Phone = request.Phone;
+        
 
 
         var result = await personRepository.UpdateAsync(entity);
 
-        return ObjectMapper.Map<ContactPersion, PersionDto>(result);
+        return ObjectMapper.Map<ContactPersion, PersonDto>(result);
     }
 }

@@ -52,7 +52,7 @@ public class ContactAppDbContext :
 
     #endregion
 
-    public DbSet<ContactPersion> ContactPersions { get; set; }
+    public DbSet<ContactPersion> ContactPersons { get; set; }
 
     public ContactAppDbContext(DbContextOptions<ContactAppDbContext> options)
         : base(options)

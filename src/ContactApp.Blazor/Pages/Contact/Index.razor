@@ -3,6 +3,8 @@
 @using ContactApp.Blazor.Services.Interface;
 
 @inject IContactService contactService
+@inject IDialogService DialogService
+@inject ISnackbar Snackbar
 
 <MudText Typo="Typo.h5" Color="Color.Primary" Class="mb-4">Danh Sách Các Contact</MudText>
 <MudGrid>
@@ -10,8 +12,8 @@
         <MudCard Style="height:100%;">
             <MudCardHeader>
                 <CardHeaderContent>
-                     <MudButton Variant="Variant.Filled" OnClick="async ()=> await GetPersions()" Color="Color.Primary" Style="margin-top: 10px; margin-right: 16px; float: right;">Thêm mới </MudButton>
-                    <MudButton Variant="Variant.Filled" OnClick="async ()=> await GetPersions()" Color="Color.Primary" Style="margin-top: 10px; margin-right: 16px; float: right;">Tìm kiếm</MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="async ()=> await OnAddNewPerson()" Color="Color.Primary" Style="margin-top: 10px; margin-right: 16px; float: right;">Thêm mới </MudButton>
+                    <MudButton Variant="Variant.Filled" OnClick="async ()=> await GetPersons()" Color="Color.Primary" Style="margin-top: 10px; margin-right: 16px; float: right;">Tìm kiếm</MudButton>
                 </CardHeaderContent>
             </MudCardHeader>
             <MudCardContent Class="px-0">
@@ -27,23 +29,29 @@
                                 <MudTh>Nghề nghiệp</MudTh>
                                 <MudTh>Ngày sinh</MudTh>
                                 <MudTh>Có là bạn thân</MudTh>
+                                <MudTd>#</MudTd>
                             </HeaderContent>
                              <RowTemplate>
                                 <MudTd DataLabel="Email">@context.Email</MudTd>
                                 <MudTd DataLabel="Họ">@context.FirstName</MudTd>
                                 <MudTd DataLabel="Tên">@context.LastName</MudTd>
-                                <MudTd DataLabel="Số điện thoại">@context.Address</MudTd>
-                                <MudTd DataLabel="Địa chỉ">@context.Job</MudTd>
+                                <MudTd DataLabel="Số điện thoại">@context.Phone</MudTd>
+                                <MudTd DataLabel="Địa chỉ">@context.Address</MudTd>
+                                <MudTd DataLabel="Nghề nghiệp">@context.Job</MudTd>
                                 <MudTd DataLabel="Ngày sinh">@context.BirthDate?.ToString("dd/MM/yyyy")</MudTd>
                                 <MudTd DataLabel="Có là bạn thân?">
                                     @if (!context.BestFriend)
                                     {
-                                        <MudButton Color="Color.Default">Không</MudButton>
+                                        <MudButton Color="Color.Default" OnClick="async () => await OpUpdateStatus(context, true)">Không</MudButton>
                                     }
                                     else
                                     {
-                                        <MudButton Color="Color.Primary">Có</MudButton>
+                                        <MudButton Color="Color.Primary"  OnClick="async () => await OpUpdateStatus(context, false)">Có</MudButton>
                                     }
+                                </MudTd>
+                                <MudTd>
+                                    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Edit" Color="Color.Primary" OnClick="async () => await OnEditPersonAsync(context)">Sửa</MudButton>
+                                    <MudButton Variant="Variant.Filled" EndIcon="@Icons.Material.Filled.Delete" Color="Color.Error" OnClick="async () => await OnDeletePersonAsync(context)">Xóa</MudButton>
                                 </MudTd>
                             </RowTemplate>
 

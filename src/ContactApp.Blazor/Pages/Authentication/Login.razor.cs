@@ -27,7 +27,7 @@ public partial class Login
         loading = true;
         if (model == null)
         {
-            errorMsg = "Đăng nhập không đúng hoặc bạn không có quyền.";
+            errorMsg = "Đăng nhập không đúng.";
         }
         else
         {
@@ -42,7 +42,7 @@ public partial class Login
             }
             else
             {
-                errorMsg = "Đăng nhập không đúng hoặc bạn không có quyền.";
+                errorMsg = "Đăng nhập không đúng.";
             }
         }
         loading = false;

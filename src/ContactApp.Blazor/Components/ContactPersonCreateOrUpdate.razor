@@ -1,0 +1,34 @@
+﻿@using ContactApp.Blazor.Services.Interface;
+@inject IContactService contactService
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <DialogContent>
+        <h2 style="text-align:center">@Title</h2>
+        <EditForm EditContext="@editContext" Context="EditFormContext">
+            <MudTextField T="string" Label="Email" @bind-Value="Person.Email"
+                          For="@(() => Person.Email)" />
+            <MudTextField T="string" Label="Họ" @bind-Value="Person.FirstName"
+                          For="@(() => Person.FirstName)" />
+            <MudTextField T="string" Label="Tên" @bind-Value="Person.LastName"
+                          For="@(() => Person.LastName)" />
+            <MudTextField T="string" Label="Số điện thoại" @bind-Value="Person.Phone"
+                          For="@(() => Person.Phone)" />
+            <MudTextField T="string" Label="Dịa chỉ" @bind-Value="Person.Address" Lines="3"
+                          For="@(() => Person.Address)" />
+            <MudTextField T="string" Label="Nghề nghiệp" @bind-Value="Person.Job"
+                          For="@(() => Person.Job)" />
+            <MudTextField T="DateTime?" Label="Ngày sinh" 
+                        Format="dd/MM/yyyy" @bind-Value="Person.BirthDate"
+                          For="@(() => Person.BirthDate)"  />
+        </EditForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="() => ClosePopup()">Đóng</MudButton>
+        <MudButton Color="Color.Success" OnClick="async () => await HandleValidSubmitAsync()">Lưu lại</MudButton>
+    </DialogActions>
+</MudDialog>
+
+<MudOverlay Visible="loading" DarkBackground="true" Absolute="true">
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+</MudOverlay>

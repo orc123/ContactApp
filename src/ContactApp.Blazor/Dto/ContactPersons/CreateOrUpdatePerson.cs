@@ -1,6 +1,6 @@
-﻿namespace ContactApp.Blazor.Dto.ContactPersions;
+﻿namespace ContactApp.Blazor.Dto.ContactPersons;
 
-public class CreateOrUpdatePersion
+public class CreateOrUpdatePerson
 {
     public string Email { get; set; }
     public string FirstName { get; set; }

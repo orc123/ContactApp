@@ -1,15 +1,15 @@
 ﻿using ContactApp.Blazor.Dto;
-using ContactApp.Blazor.Dto.ContactPersions;
+using ContactApp.Blazor.Dto.ContactPersons;
 
 namespace ContactApp.Blazor.Services.Interface;
 
 public interface IContactService
 {
-    Task<PagedResultDto<PersionDto>> GetPersionsPagingAsync(GetMyContactsRequest request);
+    Task<PagedResultDto<PersonDto>> GetPersonsPagingAsync(GetMyContactsRequest request);
 
-    Task<PersionDto> CreateAsync(CreateOrUpdatePersion request);
+    Task<bool> CreateAsync(CreateOrUpdatePerson request);
 
-    Task<PersionDto> UpdateAsync(string id ,CreateOrUpdatePersion request);
+    Task<bool> UpdateAsync(Guid id ,CreateOrUpdatePerson request);
 
-    Task<bool> DeleteAsync(string id);
+    Task<bool> DeleteAsync(Guid id);
 }

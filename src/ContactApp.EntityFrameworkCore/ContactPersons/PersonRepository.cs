@@ -30,7 +30,7 @@ public class PersonRepository :
         return (
                 await query.CountAsync(),
                 await query
-                .Skip(skipCount)
+                .Skip(skipCount - 1)
                 .Take(maxResultCount)
                 .ToListAsync()
             );

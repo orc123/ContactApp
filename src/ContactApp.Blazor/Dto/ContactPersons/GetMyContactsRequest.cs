@@ -1,4 +1,4 @@
-﻿namespace ContactApp.Blazor.Dto.ContactPersions;
+﻿namespace ContactApp.Blazor.Dto.ContactPersons;
 
 public class GetMyContactsRequest
 {

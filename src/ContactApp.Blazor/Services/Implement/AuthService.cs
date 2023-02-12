@@ -54,6 +54,10 @@ public class AuthService : IAuthService
 
         var jsonContent = await tokenResponse.Content.ReadAsStringAsync();
         response = JsonConvert.DeserializeObject<LoginResponseDto>(jsonContent);
+        if (response.access_token == null)
+        {
+            return null;
+        }
         response = await AuthenAsync(response, request.Username);
         return response;
     }
