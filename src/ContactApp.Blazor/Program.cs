@@ -1,11 +1,14 @@
 using Blazored.SessionStorage;
 using ContactApp.Blazor;
 using ContactApp.Blazor.Core.Authentication;
+using ContactApp.Blazor.Services.Implement;
+using ContactApp.Blazor.Services.Interface;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor;
 using MudBlazor.Services;
+using Toolbelt.Blazor.Extensions.DependencyInjection;
 
 namespace ContactApp.Blazor;
 
@@ -16,13 +19,15 @@ public class Program
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
         builder.RootComponents.Add<App>("#app");
         builder.RootComponents.Add<HeadOutlet>("head::after");
-        //builder.Services.AddHttpClientInterceptor();
+        builder.Services.AddHttpClientInterceptor();
         builder.Services.AddAuthorizationCore();
         builder.Services.AddBlazoredSessionStorage();
         builder.Services.AddScoped(sp => new HttpClient
         {
             BaseAddress = new Uri(builder.Configuration["BackendApiUrl"])
         });
+
+        builder.Services.AddScoped<IAuthService, AuthService>();
 
         builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
 

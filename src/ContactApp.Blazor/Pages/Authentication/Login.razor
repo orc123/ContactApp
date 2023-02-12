@@ -1,6 +1,32 @@
 ﻿@page "/"
 @page "/auth/login"
-
-
+@using ContactApp.Blazor.Services.Interface;
 @layout LoginLayout
 
+@inject IAuthService authService;
+@inject NavigationManager navigationManager;
+@inject IConfiguration configuration;
+
+<EditForm Model="@model" OnValidSubmit="HandleLogin" @onkeypress="KeyboardEventHandler">
+
+    <MudText Typo="Typo.h4" GutterBottom="true">Đăng nhập</MudText>
+
+    @if (!string.IsNullOrEmpty(errorMsg))
+    {
+        <MudText Color="@Color.Error">@errorMsg</MudText>
+    }
+    <MudTextField T="string" @bind-Value="model.Username" Label="Tài khoản" Variant="Variant.Outlined" Class="my-6"></MudTextField>
+
+    <MudTextField @bind-Value="@model.Password" Label="Mật khẩu" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordVisibility" />
+
+    <div Class="d-flex justify-space-between align-center">
+        <MudCheckBox T="bool" Label="Nhớ mật khẩu?" Color="Color.Primary" Class="ml-n1 my-3"></MudCheckBox>
+        <MudLink Href="/auth/forgot-password">Bạn quên mật khẩu?</MudLink>
+    </div>
+
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleLogin" Size="Size.Large" FullWidth="true">Đăng nhập</MudButton>
+</EditForm>
+<MudOverlay Visible="loading" DarkBackground="true" Absolute="true">
+    <MudProgressCircular Color="Color.Secondary" Indeterminate="true" />
+</MudOverlay>

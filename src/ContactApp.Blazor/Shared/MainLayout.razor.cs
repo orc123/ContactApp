@@ -2,6 +2,7 @@
 using MudBlazor.ThemeManager;
 using MudBlazor;
 using ContactApp.Blazor.Theme;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace ContactApp.Blazor.Shared;
 
@@ -32,6 +33,20 @@ public partial class MainLayout : IDisposable
 
     protected override async Task OnInitializedAsync()
     {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var accessToken = await sessionStorage.GetItemAsync<string>("AccessToken");
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+
+
+        }
+        else
+        {
+            navigationManager.NavigateTo("/auth/login");
+        }
+
         _themeManager.Theme = new MudBlazorTheme();
         _themeManager.DrawerClipMode = DrawerClipMode.Always;
         _themeManager.FontFamily = "Montserrat";
@@ -43,8 +58,8 @@ public partial class MainLayout : IDisposable
 
     private async Task HandleLogout()
     {
-        //await AuthService.LogoutAsync();
-        //NavigationManager.NavigateTo(UrlConstants.Login);
+        await authService.LogoutAsync();
+        navigationManager.NavigateTo("/auth/login");
     }
 
     public void Dispose()
